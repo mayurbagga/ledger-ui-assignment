@@ -2,7 +2,7 @@
 
 This document will map each requirement from the interview homework to its implementation in this project.
 
-## Assignment Prompt
+## Assignment
 
 **Senior Frontend Engineer – Interview Homework**
 
@@ -143,6 +143,12 @@ components:
         amount:
           type: number
 ```
+
+## Mapping to Requirements
+
+See [`CHECKLIST.md`](./CHECKLIST.md) for detailed progress and mapping to each requirement.
+
+- ShadCN UI: Button component integrated and working (manual copy from the official [ShadCN UI documentation website](https://ui.shadcn.com/docs/components)). Other components will be added as needed, following the same pattern.
 
 ## Mapping
 
