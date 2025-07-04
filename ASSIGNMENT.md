@@ -1,0 +1,149 @@
+# Assignment to Implementation Mapping
+
+This document will map each requirement from the interview homework to its implementation in this project.
+
+## Assignment Prompt
+
+**Senior Frontend Engineer – Interview Homework**
+
+### Overview
+As part of the interview process, we ask candidates to complete a short technical assignment to help us evaluate practical skills in React development, UI component design, integration with APIs, and modern frontend workflows. The goal is to build a simple double-entry ledger UI that displays transactions, account balances, and allows creating new transactions.
+
+### Objective
+Implement a minimal double-entry Ledger UI using TypeScript and React, integrating with a provided OpenAPI specification. You will design clean, reusable UI components, integrate SWR for data fetching, generate API clients with Orval, and use ShadCN UI as the core component library.
+
+### Functional Requirements
+#### Core Features
+- **Transactions List**
+  - Display a list of transactions showing:
+    - Date
+    - Description
+    - Debit Account
+    - Credit Account
+    - Amount
+- **Account Balances**
+  - Display aggregated balances per account based on transactions.
+- **Create Transaction Form**
+  - Allow creation of a new transaction with:
+    - Description
+    - Debit Account
+    - Credit Account
+    - Amount
+  - **Validation Rules:**
+    - Debit and Credit accounts cannot be the same
+    - Amounts must be a valid number
+
+#### Required Features
+- Use ShadCN UI for form inputs, tables/lists, buttons, and any modals or toasts.
+- Use SWR for data fetching and mutations.
+- Generate API client hooks using Orval from the provided OpenAPI specification
+- Build Storybook stories for:
+  - Transaction Row component
+  - Account Balance Summary component
+  - Transaction Form component
+- Write component and integration tests for:
+  - Rendering of transactions and balances
+  - Form validation
+  - Optimistic update flow when creating a transaction
+
+### Technical Requirements
+- Use TypeScript throughout the codebase.
+- Use React with functional components and hooks.
+- Use ShadCN UI as the component library and styling system.
+- Integrate SWR with Orval-generated hooks.
+- Implement a clean folder and module structure.
+- Include input validation in forms (AJV, Zod, or other).
+- Include basic error handling
+
+### Bonus (Optional but Encouraged)
+- Implement date selection for the transaction form using ShadCN DatePicker.
+- Add filtering to the transaction list by account.
+- Implement theme toggling (light/dark) using ShadCN theming.
+- Deploy the project to Vercel or Netlify and include the deployment link in your README.
+
+### Expectations
+- Professional, idiomatic TypeScript and React code
+- Clean, readable component structure with thoughtful abstraction
+- Effective use of ShadCN UI components
+- Demonstrated understanding of optimistic updates with SWR
+- Good Storybook coverage for key components
+- Testing approach that ensures confidence in functionality and correctness
+
+### Submission Guidelines
+- Provide a GitHub repository link or ZIP file of the project.
+- Include a README.md with:
+  - Setup instructions
+  - Any assumptions or trade-offs made
+  - Brief explanation of design decisions
+  - Deployment link (if bonus attempted)
+
+### OpenAPI Specification
+Use the following minimal example for generating your SWR-based API hooks via Orval:
+
+```yaml
+openapi: 3.0.0
+info:
+  title: Ledger API
+  version: 1.0.0
+paths:
+  /transactions:
+    get:
+      summary: Get Transactions
+      responses:
+        '200':
+          description: List of transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+    post:
+      summary: Create Transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTransaction'
+      responses:
+        '201':
+          description: Transaction created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+components:
+  schemas:
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+        debitAccount:
+          type: string
+        creditAccount:
+          type: string
+        amount:
+          type: number
+    NewTransaction:
+      type: object
+      properties:
+        description:
+          type: string
+        debitAccount:
+          type: string
+        creditAccount:
+          type: string
+        amount:
+          type: number
+```
+
+## Mapping
+
+This section will be updated as features are completed.
