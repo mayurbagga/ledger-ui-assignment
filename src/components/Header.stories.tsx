@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Header } from './Header';
+import { ThemeProvider } from '@/providers/ThemeProvider';
 
 const meta: Meta<typeof Header> = {
   title: 'Components/Header',
@@ -11,6 +12,13 @@ const meta: Meta<typeof Header> = {
     onAddTransaction: { action: 'transaction added' },
     onToggleBalances: { action: 'balances toggled' },
   },
+  decorators: [
+    (Story) => (
+      <ThemeProvider>
+        <Story />
+      </ThemeProvider>
+    ),
+  ],
 };
 
 export default meta;

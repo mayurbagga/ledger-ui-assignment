@@ -1,5 +1,7 @@
 import React from 'react';
 import { BookOpen, Plus, BarChart3 } from 'lucide-react';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { ThemeToggle } from './ThemeToggle';
 
 interface HeaderProps {
   onAddTransaction?: () => void;
@@ -7,6 +9,8 @@ interface HeaderProps {
 }
 
 export function Header({ onAddTransaction, onToggleBalances }: HeaderProps) {
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 w-full">
       <div className="w-full px-4 py-3">
@@ -26,13 +30,18 @@ export function Header({ onAddTransaction, onToggleBalances }: HeaderProps) {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Balances Toggle */}
-            <button
-              onClick={onToggleBalances}
-              className="h-9 w-9 p-0 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground"
-            >
-              <BarChart3 className="h-4 w-4" />
-            </button>
+            {/* Theme Toggle */}
+           
+
+            {/* Balances Toggle - Only on Mobile */}
+            {isMobile && (
+              <button
+                onClick={onToggleBalances}
+                className="h-9 w-9 p-0 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+              >
+                <BarChart3 className="h-4 w-4" />
+              </button>
+            )}
 
             {/* New Transaction Button */}
             <button
@@ -42,6 +51,7 @@ export function Header({ onAddTransaction, onToggleBalances }: HeaderProps) {
               <Plus className="mr-2 h-4 w-4" />
               New Transaction
             </button>
+            <ThemeToggle />
           </div>
         </div>
       </div>

@@ -1,82 +1,108 @@
 # Ledger UI Assignment
 
-A double-entry ledger UI built with React, TypeScript, and modern web technologies. This project demonstrates a complete frontend application with API integration, mocking, and component-driven development.
+A modern double-entry ledger UI built with React, TypeScript, SWR, and ShadCN UI components.
+
+## Current Status: Foundation Complete (60% Done)
+
+### Completed Features
+- **Core Infrastructure**: API client generation (Orval), SWR integration, MSW mocking
+- **UI Components**: Responsive layout, header, transactions list, account balance summary
+- **Theme System**: Dark/light mode with smooth transitions and persistence
+- **Storybook**: 5 components with 15 comprehensive stories
+- **Responsive Design**: Mobile/desktop optimized layouts
+
+### Features to be Completed
+- Transaction creation form
+- Form validation
+- Optimistic updates
+- Testing suite
 
 ## Tech Stack
-- **React 19** with TypeScript
-- **Tailwind CSS v3** with shadcn/ui design system
-- **SWR** for server state management
-- **Orval** for API client generation
-- **MSW** for API mocking in development
-- **Axios** for HTTP requests
-- **Storybook** for component development
-- **Vitest** for testing
-- **Vite** for build tooling
 
-## Features Implemented
-- ✅ **API Client Generation** - TypeScript types and SWR hooks auto-generated
-- ✅ **API Mocking** - Realistic mock data with network delay simulation
-- ✅ **Responsive Layout** - Clean header and centered content layout
-- ✅ **Transaction List** - Basic display with loading and error states
-- ✅ **Component Library** - ShadCN UI components with proper theming
-- ✅ **Development Tools** - Storybook, ESLint, and TypeScript setup
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS v3, ShadCN UI components
+- **State Management**: SWR for server state
+- **API**: Orval for client generation, MSW for mocking
+- **Development**: Storybook, ESLint
+- **Testing**: Vitest, Testing Library (planned)
 
-## Setup Instructions
+## Installation
 
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
+```bash
+npm install
+```
 
-### Installation
-1. Clone the repository and install dependencies:
-   ```bash
-   git clone https://github.com/mayurbagga/ledger-ui-assignment.git
-   cd ledger-ui-assignment
-   npm install
-   ```
+## Development
 
-2. Generate the API client (required for first run):
-   ```bash
-   npm run generate-api
-   ```
+```bash
+# Start development server
+npm run dev
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+# Start Storybook
+npm run storybook
 
-4. (Optional) Run Storybook for component development:
-   ```bash
-   npm run storybook
-   ```
+# Build for production
+npm run build
 
-### Available Scripts
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run generate-api` - Generate API client from OpenAPI spec
-- `npm run storybook` - Start Storybook development server
-- `npm run build-storybook` - Build Storybook for deployment
-- `npm run lint` - Run ESLint
+# Run tests (when implemented)
+npm run test
+```
 
 ## Project Structure
+
 ```
 src/
-├── api/                 # Generated API client and types
+├── api/                 # Generated API client
 ├── components/          # React components
 │   ├── ui/             # ShadCN UI components
 │   └── __tests__/      # Component tests
 ├── hooks/              # Custom React hooks
-├── mocks/              # MSW mock handlers
+├── providers/          # Context providers
 ├── types/              # TypeScript type definitions
-└── utils/              # Utility functions
+├── utils/              # Utility functions
+└── constants/          # Application constants
 ```
 
-## Development Notes
-- **API Mocking**: MSW runs only in development mode and provides realistic sample data
-- **Component Development**: Use Storybook for isolated component development
-- **Styling**: Tailwind CSS v3 with shadcn/ui design tokens
-- **Type Safety**: Full TypeScript coverage with generated API types
+## Features
 
-## Documentation & Progress
-See [`CHECKLIST.md`](./CHECKLIST.md) for detailed progress, requirement mapping, and implementation notes.
+### Core Functionality
+- **Account Balance Summary**: Categorized display of assets and liabilities
+- **Transactions List**: Enhanced display with proper error handling
+- **Responsive Layout**: Mobile-first design with desktop optimization
+- **Theme Toggle**: Dark/light mode with system preference detection
+
+### Development Experience
+- **API Mocking**: Realistic sample data with network delays
+- **Storybook**: Interactive component documentation
+- **Type Safety**: Full TypeScript coverage
+- **Hot Reload**: Fast development with Vite
+
+## Storybook
+
+Access Storybook at `http://localhost:6006` to view:
+- Component documentation
+- Interactive examples
+- Responsive design testing
+- Theme variations
+
+## Configuration
+
+- **Orval**: API client generation from OpenAPI spec
+- **MSW**: API mocking for development
+- **Tailwind**: Custom CSS variables for theming
+- **ESLint**: Code quality and consistency
+
+## Next Steps
+
+1. **Transaction Form**: Build form component with validation
+2. **SWR Mutations**: Implement transaction creation
+3. **Optimistic Updates**: Add optimistic UI updates
+4. **Testing**: Add comprehensive test suite
+5. **Documentation**: Complete API documentation
+
+## Notes
+
+- ShadCN UI components are manually copied from the official documentation
+- API mocking runs only in development mode
+- Theme preferences are persisted in localStorage
+- Responsive design switches between mobile and desktop layouts
