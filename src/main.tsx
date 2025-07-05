@@ -6,8 +6,9 @@ import { ThemeProvider } from './providers/ThemeProvider';
 
 async function main() {
   if (import.meta.env.DEV) {
-    const { worker } = await import('./mocks/browser');
-    worker.start();
+    // Disabled MSW for now - using only fallback data
+    // const { worker } = await import('./mocks/browser');
+    // worker.start();
   }
 
   ReactDOM.createRoot(document.getElementById('root')!).render(

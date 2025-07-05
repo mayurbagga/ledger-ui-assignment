@@ -1,7 +1,14 @@
-import { rest } from 'msw';
+import { http } from 'msw';
 
-// Example in-memory data
-let transactions = [
+interface TransactionData {
+  description: string;
+  debitAccount: string;
+  creditAccount: string;
+  amount: number;
+}
+
+// Example in-memory data with more transactions
+const transactions = [
   {
     id: '1',
     date: '2024-01-01',
@@ -10,20 +17,36 @@ let transactions = [
     creditAccount: 'Owner\'s Equity',
     amount: 1000,
   },
+  {
+    id: '2',
+    date: '2024-01-02',
+    description: 'Office supplies',
+    debitAccount: 'Office Expenses',
+    creditAccount: 'Cash',
+    amount: 150,
+  },
+  {
+    id: '3',
+    date: '2024-01-03',
+    description: 'Client payment',
+    debitAccount: 'Cash',
+    creditAccount: 'Accounts Receivable',
+    amount: 500,
+  },
 ];
 
 // Define handlers for your API endpoints
 export const handlers = [
   // GET /transactions
-  rest.get('/api/transactions', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(transactions));
+  http.get('/api/transactions', () => {
+    return Response.json(transactions);
   }),
 
   // POST /transactions
-  rest.post('/api/transactions', async (req, res, ctx) => {
-    const data = await req.json();
+  http.post('/api/transactions', async ({ request }) => {
+    const data = await request.json() as TransactionData;
     const newTransaction = { ...data, id: String(Date.now()) };
-    transactions.push(newTransaction);
-    return res(ctx.status(201), ctx.json(newTransaction));
+    // Note: In a real app, you'd update the transactions array here
+    return Response.json(newTransaction, { status: 201 });
   }),
 ];
