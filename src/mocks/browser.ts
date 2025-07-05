@@ -1,18 +1,16 @@
 import { setupWorker } from 'msw/browser';
-import { http, HttpResponse, delay } from 'msw';
+import { http, HttpResponse } from 'msw';
 import { sampleTransactions, generateRealisticTransaction } from './transactions';
 
 
 const customMockHandlers = [
   // GET transactions
   http.get('*/transactions', async () => {
-    await delay(500); // network latency
     return HttpResponse.json(sampleTransactions);
   }),
 
   // POST transactions
   http.post('*/transactions', async ({ request }) => {
-    await delay(500);
     const body = await request.json();
     const newTransaction = generateRealisticTransaction(body);
     sampleTransactions.push(newTransaction);
@@ -21,7 +19,6 @@ const customMockHandlers = [
 
   // DELETE transactions
   http.delete('*/transactions/:id', async ({ params }) => {
-    await delay(500);
     const { id } = params;
     const idx = sampleTransactions.findIndex(t => t.id === id);
     if (idx !== -1) sampleTransactions.splice(idx, 1);
