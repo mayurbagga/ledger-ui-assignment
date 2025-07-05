@@ -11,6 +11,7 @@
 - [x] Account balances display (responsive with categorization)
 - [x] Theme system (dark/light mode with persistence)
 - [x] Storybook setup with component stories
+- [x] Transaction Row component (responsive layouts with delete functionality)
 - [ ] Transaction form & validation
 - [ ] Optimistic updates
 - [ ] Testing (Vitest, Testing Library)
@@ -30,6 +31,9 @@
 - **Storybook stories** - 5 components with 15 total stories covering various scenarios
 - **Tailwind CSS v3 migration** - Fixed styling issues by downgrading from v4 to v3
 - **CSS variables and theming** - Proper shadcn/ui color system implemented
+- **TransactionRow component** - Complete responsive design with mobile/desktop layouts
+- **MSW integration** - Development with loading states, production with fallback data
+- **Environment-aware loading** - Different behavior for dev vs production
 
 ## Mapping to Assignment Requirements
 - [x] **Orval API client generation**: Configured in orval.config.ts
@@ -41,33 +45,38 @@
 - [x] **SWR integration**: useTransactions hook with proper error and loading states
 - [x] **Account Balances**: Complete implementation with categorization and totals
 - [x] **Theme System**: Dark/light mode toggle (bonus feature)
-- [x] **Storybook Stories**: AccountBalanceSummary component stories
+- [x] **Storybook Stories**: AccountBalanceSummary and TransactionRow component stories
+- [x] **Transaction Row Component**: Complete with responsive design and delete functionality
 - [ ] **Transaction Form**: Core requirement - NOT IMPLEMENTED
-- [ ] **Transaction Row Component**: Required for Storybook
 - [ ] **Form Validation**: Required for transaction creation
 - [ ] **Optimistic Updates**: Required for better UX
 - [ ] **Testing**: Component and integration tests required
 
-## Current Status: Foundation Complete (60% Done)
+## Current Status: Foundation Complete (70% Done)
 ### Completed Features:
 1. **Core Infrastructure** - API, SWR, Orval, ShadCN, MSW
-2. **Transactions Display** - Enhanced list with proper styling
+2. **Transactions Display** - Enhanced list with responsive design
 3. **Account Balances** - Complete with responsive design and categorization
 4. **Theme System** - Dark/light mode with persistence
 5. **Responsive Layout** - Mobile/desktop optimized
-6. **Storybook Setup** - 5 components with comprehensive stories
+6. **Storybook Setup** - 6 components with comprehensive stories
+7. **TransactionRow Component** - Complete responsive design with layouts
+8. **Environment Handling** - Development with MSW, production with fallback data
 
 ### Features to be Completed:
 1. **Transaction Form** - Create new transactions (CORE REQUIREMENT)
-2. **Transaction Row Component** - Dedicated component for Storybook
-3. **Form Validation** - Input validation for transaction creation
-4. **Optimistic Updates** - Better UX for mutations
-5. **Testing** - Component and integration tests
+2. **Form Validation** - Input validation for transaction creation
+3. **Optimistic Updates** - Better UX for mutations
+4. **Testing** - Component and integration tests
 
 ## Next Steps
 1. **Transaction Form Component** - Build form with validation
-2. **Transaction Row Component** - Create dedicated component
-3. **SWR Mutations** - Implement transaction creation
-4. **Optimistic Updates** - Add optimistic UI updates
-5. **Testing** - Add unit and integration tests
-6. **Complete Storybook** - Add remaining component stories
+2. **SWR Mutations** - Implement transaction creation
+3. **Optimistic Updates** - Add optimistic UI updates
+4. **Testing** - Add unit and integration tests
+5. **Complete Storybook** - Add remaining component stories
+
+## Environment Behavior
+- **Development**: MSW with 2-second loading states, real SWR integration
+- **Production**: Fallback data immediately, no loading delays
+- **Vercel**: Clean deployment with working UI and sample data

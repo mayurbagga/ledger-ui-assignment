@@ -9,6 +9,7 @@ function App() {
   const [showBalances, setShowBalances] = useState(false);
   const { balances, isLoading: balancesLoading } = useAccountBalances();
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const isDevelopment = import.meta.env.DEV;
 
   const handleAddTransaction = () => {
     console.log('Add transaction clicked - will implement form later');
@@ -22,16 +23,39 @@ function App() {
 
   // Render balance content
   const renderBalanceContent = () => {
-    if (balancesLoading && balances.length === 0) {
+    // Show loading state only in development with MSW
+    if (balancesLoading && isDevelopment) {
       return (
-        <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="text-sm text-muted-foreground mt-2">Loading account balances...</p>
+        <div className="space-y-4">
+          {/* Summary Cards Skeleton */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="p-4 rounded-lg bg-muted animate-pulse">
+              <div className="h-4 bg-muted-foreground/20 rounded w-16 mb-2"></div>
+              <div className="h-6 bg-muted-foreground/20 rounded w-24"></div>
+            </div>
+            <div className="p-4 rounded-lg bg-muted animate-pulse">
+              <div className="h-4 bg-muted-foreground/20 rounded w-20 mb-2"></div>
+              <div className="h-6 bg-muted-foreground/20 rounded w-24"></div>
+            </div>
+          </div>
+          
+          {/* Account Balances Skeleton */}
+          <div className="border rounded-lg p-4">
+            <div className="h-5 bg-muted-foreground/20 rounded w-32 mb-4"></div>
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="flex justify-between items-center p-2">
+                  <div className="h-4 bg-muted-foreground/20 rounded w-24"></div>
+                  <div className="h-4 bg-muted-foreground/20 rounded w-20"></div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       );
     }
     
-    // Show balances even if there's an error, since we have fallback data
+    // Show balances (will use fallback data in production if needed)
     return <AccountBalanceSummary balances={balances} />;
   };
 

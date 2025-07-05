@@ -1,108 +1,118 @@
 # Ledger UI Assignment
 
+**🌐 Live Demo:** [https://ledger-ui-assignment-ubor.vercel.app/](https://ledger-ui-assignment-ubor.vercel.app/)
+
+**📋 Project Checklist:** [CHECKLIST.md](./CHECKLIST.md)
+
 A modern double-entry ledger UI built with React, TypeScript, SWR, and ShadCN UI components.
 
-## Current Status: Foundation Complete (60% Done)
+## Features
 
-### Completed Features
-- **Core Infrastructure**: API client generation (Orval), SWR integration, MSW mocking
-- **UI Components**: Responsive layout, header, transactions list, account balance summary
-- **Theme System**: Dark/light mode with smooth transitions and persistence
-- **Storybook**: 5 components with 15 comprehensive stories
-- **Responsive Design**: Mobile/desktop optimized layouts
-
-### Features to be Completed
-- Transaction creation form
-- Form validation
-- Optimistic updates
-- Testing suite
+- **Modern Tech Stack**: React 18, TypeScript, Vite, Tailwind CSS
+- **API Integration**: Orval-generated API client with SWR for data fetching
+- **UI Components**: ShadCN UI components with responsive design
+- **Theme System**: Dark/light mode toggle with system preference detection
+- **Account Balances**: Real-time balance calculation with asset/liability categorization
+- **Responsive Design**: Mobile-first design with desktop optimizations
+- **Storybook**: Component documentation and testing
+- **API Mocking**: MSW for development with realistic sample data
 
 ## Tech Stack
 
 - **Frontend**: React 18, TypeScript, Vite
-- **Styling**: Tailwind CSS v3, ShadCN UI components
-- **State Management**: SWR for server state
-- **API**: Orval for client generation, MSW for mocking
-- **Development**: Storybook, ESLint
-- **Testing**: Vitest, Testing Library (planned)
+- **Styling**: Tailwind CSS v3, ShadCN UI
+- **State Management**: SWR for server state, React Context for theme
+- **API**: Orval-generated client with custom Axios instance
+- **Testing**: Vitest, Testing Library, Storybook
+- **Mocking**: MSW (development only)
 
-## Installation
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
 
 ```bash
+# Install dependencies
 npm install
-```
 
-## Development
-
-```bash
 # Start development server
 npm run dev
 
 # Start Storybook
 npm run storybook
 
+# Run tests
+npm test
+
 # Build for production
 npm run build
-
-# Run tests (when implemented)
-npm run test
 ```
 
 ## Project Structure
 
 ```
 src/
-├── api/                 # Generated API client
+├── api/                 # API client (Orval-generated)
 ├── components/          # React components
 │   ├── ui/             # ShadCN UI components
 │   └── __tests__/      # Component tests
 ├── hooks/              # Custom React hooks
+├── lib/                # Utility functions
+├── mocks/              # MSW handlers
 ├── providers/          # Context providers
 ├── types/              # TypeScript type definitions
-├── utils/              # Utility functions
-└── constants/          # Application constants
+└── utils/              # Helper utilities
 ```
 
-## Features
+## Key Components
 
-### Core Functionality
-- **Account Balance Summary**: Categorized display of assets and liabilities
-- **Transactions List**: Enhanced display with proper error handling
-- **Responsive Layout**: Mobile-first design with desktop optimization
-- **Theme Toggle**: Dark/light mode with system preference detection
+### Layout & Header
+- Responsive layout with mobile/desktop optimizations
+- Theme toggle with system preference detection
+- Account balance display with toggle functionality
 
-### Development Experience
-- **API Mocking**: Realistic sample data with network delays
-- **Storybook**: Interactive component documentation
-- **Type Safety**: Full TypeScript coverage
-- **Hot Reload**: Fast development with Vite
+### Account Balance Summary
+- Real-time balance calculation
+- Asset/liability categorization
+- Responsive design with mobile/desktop layouts
+- Loading states and error handling
 
-## Storybook
+### Transactions List
+- Card-based transaction display
+- Responsive design with mobile/desktop layouts
+- Error states and loading skeletons
+- SWR integration with optimistic updates
 
-Access Storybook at `http://localhost:6006` to view:
-- Component documentation
-- Interactive examples
-- Responsive design testing
-- Theme variations
+### Transaction Row
+- Individual transaction display
+- Responsive layouts for mobile and desktop
+- Delete functionality with confirmation
+- Proper date formatting and amount display
 
-## Configuration
+## API Integration
 
-- **Orval**: API client generation from OpenAPI spec
-- **MSW**: API mocking for development
-- **Tailwind**: Custom CSS variables for theming
-- **ESLint**: Code quality and consistency
+The project uses Orval to generate TypeScript API client from OpenAPI specification:
 
-## Next Steps
+- **Generated Types**: Full TypeScript types for all API endpoints
+- **SWR Hooks**: Auto-generated hooks for data fetching
+- **Custom Instance**: Axios instance with interceptors and error handling
+- **MSW Mocking**: Development-only API mocking with realistic data
 
-1. **Transaction Form**: Build form component with validation
-2. **SWR Mutations**: Implement transaction creation
-3. **Optimistic Updates**: Add optimistic UI updates
-4. **Testing**: Add comprehensive test suite
-5. **Documentation**: Complete API documentation
+## Environment Behavior
 
-## Notes
+- **Development**: MSW with loading states and realistic delays
+- **Production**: Fallback data for immediate display
+- **Vercel**: Clean deployment with working UI and sample data
 
-- ShadCN UI components are manually copied from the official documentation
-- API mocking runs only in development mode
-- Theme preferences are persisted in localStorage
-- Responsive design switches between mobile and desktop layouts
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run storybook` - Start Storybook
+- `npm run test` - Run tests
+- `npm run lint` - Run ESLint
