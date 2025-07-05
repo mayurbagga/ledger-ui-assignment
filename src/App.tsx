@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Layout } from './components/Layout';
 import { TransactionsList } from './components/TransactionsList';
 import { AccountBalanceSummary } from './components/AccountBalanceSummary';
+import { TransactionForm } from './components/TransactionForm';
 import { useAccountBalances } from './hooks/useAccountBalances';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { Button } from './components/ui/button';
 
 function App() {
   const [showBalances, setShowBalances] = useState(false);
@@ -11,9 +13,24 @@ function App() {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isDevelopment = import.meta.env.DEV;
 
+  const [showTransactionForm, setShowTransactionForm] = useState(false);
+
   const handleAddTransaction = () => {
-    console.log('Add transaction clicked - will implement form later');
-    // TODO: Open transaction form modal/dialog
+    setShowTransactionForm(true);
+  };
+
+
+
+  const handleSubmitTransaction = async (transaction: {
+    description: string;
+    debitAccount: string;
+    creditAccount: string;
+    amount: number;
+    date: string;
+  }) => {
+    console.log('Transaction submitted:', transaction);
+    // TODO: Implement actual transaction creation
+    setShowTransactionForm(false);
   };
 
   const handleToggleBalances = () => {
@@ -68,14 +85,41 @@ function App() {
   const desktopSidebarContent = !isMobile ? renderBalanceContent() : null;
 
   return (
-    <Layout 
-      onAddTransaction={handleAddTransaction} 
-      onToggleBalances={handleToggleBalances}
-      sidebarContent={desktopSidebarContent}
-    >
-      {mobileBalanceContent}
-      <TransactionsList />
-    </Layout>
+    <>
+      <Layout 
+        onAddTransaction={handleAddTransaction} 
+        onToggleBalances={handleToggleBalances}
+        sidebarContent={desktopSidebarContent}
+      >
+        {mobileBalanceContent}
+        <TransactionsList />
+      </Layout>
+      
+      {showTransactionForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-background rounded-lg shadow-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold">Create New Transaction</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowTransactionForm(false)}
+                  className="h-8 w-8 p-0"
+                >
+                  <span className="sr-only">Close</span>
+                  ×
+                </Button>
+              </div>
+              <TransactionForm 
+                onSubmit={handleSubmitTransaction}
+                isLoading={false}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
