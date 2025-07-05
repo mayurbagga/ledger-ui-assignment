@@ -37,7 +37,7 @@ const fallbackTransactions: Transaction[] = [
     description: 'Client payment received',
     debitAccount: 'Cash',
     creditAccount: 'Accounts Receivable',
-    amount: 2500,
+    amount: 2600,
   },
 ];
 
