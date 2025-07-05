@@ -7,7 +7,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 function App() {
   const [showBalances, setShowBalances] = useState(false);
-  const { balances, isLoading: balancesLoading, error: balancesError } = useAccountBalances();
+  const { balances, isLoading: balancesLoading } = useAccountBalances();
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const handleAddTransaction = () => {
@@ -22,7 +22,7 @@ function App() {
 
   // Render balance content
   const renderBalanceContent = () => {
-    if (balancesLoading) {
+    if (balancesLoading && balances.length === 0) {
       return (
         <div className="text-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
@@ -31,14 +31,7 @@ function App() {
       );
     }
     
-    if (balancesError) {
-      return (
-        <div className="text-center py-8">
-          <p className="text-sm text-destructive">Error loading account balances.</p>
-        </div>
-      );
-    }
-    
+    // Show balances even if there's an error, since we have fallback data
     return <AccountBalanceSummary balances={balances} />;
   };
 

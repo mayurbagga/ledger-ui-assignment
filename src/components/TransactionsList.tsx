@@ -1,17 +1,9 @@
 import React from 'react';
 // Import the SWR hook from Orval
 import { useGetTransactions } from '@/api/generated/ledgerAPI';
+import { TransactionRow } from './TransactionRow';
+import { Transaction } from '@/types/api';
     
-
-// Define the Transaction type
-export type Transaction = {
-  id: string;
-  date: string;
-  description: string;
-  debitAccount: string;
-  creditAccount: string;
-  amount: number;
-};
 
 // Fallback data to show immediately
 const fallbackTransactions = [
@@ -55,6 +47,11 @@ export function TransactionsList() {
     ? fallbackTransactions 
     : transactions;
   
+  const handleDeleteTransaction = (id: string) => {
+    console.log('Delete transaction:', id);
+    // TODO: Implement delete functionality with SWR mutation
+  };
+
   if (transactionArray.length === 0) {
     return <div>No transactions found.</div>;
   }
@@ -62,24 +59,15 @@ export function TransactionsList() {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Transactions</h2>
-      <ul className="space-y-2">
+      <div className="border rounded-lg overflow-hidden">
         {transactionArray.map((txn: Transaction) => (
-          <li key={txn.id} className="p-3 border rounded-lg bg-card">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="font-medium">{txn.description}</p>
-                <p className="text-sm text-muted-foreground">{txn.date}</p>
-                <p className="text-sm">
-                  {txn.debitAccount} → {txn.creditAccount}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="font-mono font-semibold">${txn.amount.toFixed(2)}</p>
-              </div>
-            </div>
-          </li>
+          <TransactionRow 
+            key={txn.id} 
+            transaction={txn} 
+            onDelete={handleDeleteTransaction}
+          />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
