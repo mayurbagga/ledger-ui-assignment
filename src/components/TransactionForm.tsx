@@ -13,6 +13,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Loader2, Plus, ArrowRight, DollarSign, CalendarIcon } from 'lucide-react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { usePostTransactions, useGetTransactions } from '@/api/generated/ledgerAPI';
 
 const transactionSchema = z.object({
   description: z.string().min(1, 'Description is required'),
@@ -28,16 +29,20 @@ const transactionSchema = z.object({
 type TransactionFormData = z.infer<typeof transactionSchema>;
 
 interface TransactionFormProps {
-  onSubmit: (transaction: TransactionFormData) => Promise<void>;
   isLoading?: boolean;
+  onSuccess?: () => void;
 }
 
-export const TransactionForm = ({ onSubmit, isLoading = false }: TransactionFormProps) => {
+export const TransactionForm = ({ isLoading = false, onSuccess }: TransactionFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [open, setOpen] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
+
+  // Orval-generated hooks for API integration and SWR cache
+  const { trigger: createTransaction } = usePostTransactions();
+  const { data: transactions, mutate } = useGetTransactions();
 
   const {
     register,
@@ -56,33 +61,77 @@ export const TransactionForm = ({ onSubmit, isLoading = false }: TransactionForm
   const debitAccount = watch('debitAccount');
   const creditAccount = watch('creditAccount');
 
+  // Optimistic update and API integration
   const handleFormSubmit = async (data: TransactionFormData) => {
     setIsSubmitting(true);
     setError(null);
 
+    // 1. Create an optimistic transaction
+    const optimisticTransaction = {
+      id: `temp-${Date.now()}`,
+      ...data,
+    };
+
+    // 2. Optimistically update the UI
+    mutate([...(transactions || []), optimisticTransaction], false);
+
     try {
-      await onSubmit(data);
+      // 3. Call the API
+      const created = await createTransaction(data);
+
+      // 4. Replace the optimistic transaction with the real one
+      const filtered = (transactions || []).filter(t => !t.id?.startsWith('temp-'));
+      mutate([...filtered, created], false);
+
       reset();
       setSelectedDate(new Date());
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      if (onSuccess) onSuccess(); // Only call the callback
+    } catch (error) {
+      // 5. Revert the optimistic update
+      mutate(transactions, false);
+      
+      // Provide more specific error messages
+      console.error('Transaction creation failed:', error);
+      
+      if (error instanceof Error) {
+        if (error.message.includes('Network Error') || error.message.includes('Failed to fetch')) {
+          setError("Network error: Unable to connect to server. Please check your connection.");
+        } else if (error.message.includes('404')) {
+          setError("API endpoint not found. Please contact support.");
+        } else if (error.message.includes('500')) {
+          setError("Server error. Please try again later.");
+        } else {
+          setError(`Failed to create transaction: ${error.message}`);
+        }
+      } else {
+        setError("Failed to create transaction. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const FormContent = () => (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription className="text-xs">{error}</AlertDescription>
         </Alert>
       )}
 
+      {/* Development Info */}
+      {/* {import.meta.env.DEV && (
+        <Alert variant="default" className="bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800">
+          <AlertDescription className="text-xs text-blue-700 dark:text-blue-300">
+            🧪 Development Mode: Using Mock Service Worker for API calls
+          </AlertDescription>
+        </Alert>
+      )} */}
+
       {/* Date Selection */}
-      <div className="space-y-2">
-        <Label htmlFor="date" className="text-sm font-medium flex items-center gap-2">
-          <CalendarIcon className="h-4 w-4" />
+      <div className="space-y-1">
+        <Label htmlFor="date" className="text-xs font-medium flex items-center gap-2">
+          {/* <CalendarIcon className="h-4 w-4" /> */}
           Transaction Date
         </Label>
         <Popover open={open} onOpenChange={setOpen}>
@@ -91,7 +140,7 @@ export const TransactionForm = ({ onSubmit, isLoading = false }: TransactionForm
               type="button"
               variant="outline"
               className={
-                "w-full h-12 justify-start text-left font-normal" +
+                "w-full h-9 justify-start text-left font-normal text-xs" +
                 (!selectedDate ? " text-muted-foreground" : "")
               }
             >
@@ -122,36 +171,36 @@ export const TransactionForm = ({ onSubmit, isLoading = false }: TransactionForm
           value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
         />
         {errors.date && (
-          <p className="text-sm text-destructive">{errors.date.message}</p>
+          <p className="text-xs text-destructive">{errors.date.message}</p>
         )}
       </div>
 
       {/* Description */}
-      <div className="space-y-2">
-        <Label htmlFor="description" className="text-sm font-medium">
+      <div className="space-y-1">
+        <Label htmlFor="description" className="text-xs font-medium">
           Description
         </Label>
         <Input
           id="description"
           {...register('description')}
           placeholder="Enter transaction description"
-          className="h-12 text-base"
+          className="h-9 text-xs"
         />
         {errors.description && (
-          <p className="text-sm text-destructive">{errors.description.message}</p>
+          <p className="text-xs text-destructive">{errors.description.message}</p>
         )}
       </div>
 
       {/* Account Selection */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <span>Account Flow</span>
           <ArrowRight className="h-4 w-4" />
         </div>
         
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="debitAccount" className="text-sm font-medium flex items-center gap-2">
+        <div className="space-y-2">
+          <div className="space-y-1">
+            <Label htmlFor="debitAccount" className="text-xs font-medium flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-green-500" />
               Debit Account
             </Label>
@@ -159,24 +208,24 @@ export const TransactionForm = ({ onSubmit, isLoading = false }: TransactionForm
               value={debitAccount || ''} 
               onValueChange={(value) => setValue('debitAccount', value)}
             >
-              <SelectTrigger className="h-12 text-base">
+              <SelectTrigger className="h-9 text-xs">
                 <SelectValue placeholder="Select debit account" />
               </SelectTrigger>
               <SelectContent>
                 {ACCOUNT_TYPES.map((account) => (
-                  <SelectItem key={account} value={account} className="text-base py-3">
+                  <SelectItem key={account} value={account} className="text-xs py-1.5">
                     {account}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
             {errors.debitAccount && (
-              <p className="text-sm text-destructive">{errors.debitAccount.message}</p>
+              <p className="text-xs text-destructive">{errors.debitAccount.message}</p>
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="creditAccount" className="text-sm font-medium flex items-center gap-2">
+          <div className="space-y-1">
+            <Label htmlFor="creditAccount" className="text-xs font-medium flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-red-500" />
               Credit Account
             </Label>
@@ -184,7 +233,7 @@ export const TransactionForm = ({ onSubmit, isLoading = false }: TransactionForm
               value={creditAccount || ''} 
               onValueChange={(value) => setValue('creditAccount', value)}
             >
-              <SelectTrigger className="h-12 text-base">
+              <SelectTrigger className="h-9 text-xs">
                 <SelectValue placeholder="Select credit account" />
               </SelectTrigger>
               <SelectContent>
@@ -193,7 +242,7 @@ export const TransactionForm = ({ onSubmit, isLoading = false }: TransactionForm
                     key={account} 
                     value={account}
                     disabled={account === debitAccount}
-                    className="text-base py-3"
+                    className="text-xs py-1.5"
                   >
                     {account}
                   </SelectItem>
@@ -201,15 +250,15 @@ export const TransactionForm = ({ onSubmit, isLoading = false }: TransactionForm
               </SelectContent>
             </Select>
             {errors.creditAccount && (
-              <p className="text-sm text-destructive">{errors.creditAccount.message}</p>
+              <p className="text-xs text-destructive">{errors.creditAccount.message}</p>
             )}
           </div>
         </div>
       </div>
 
       {/* Amount */}
-      <div className="space-y-2">
-        <Label htmlFor="amount" className="text-sm font-medium flex items-center gap-2">
+      <div className="space-y-1">
+        <Label htmlFor="amount" className="text-xs font-medium flex items-center gap-2">
           <DollarSign className="h-4 w-4" />
           Amount
         </Label>
@@ -220,10 +269,10 @@ export const TransactionForm = ({ onSubmit, isLoading = false }: TransactionForm
           min="0"
           {...register('amount', { valueAsNumber: true })}
           placeholder="0.00"
-          className="h-12 font-mono text-base"
+          className="h-9 font-mono text-xs"
         />
         {errors.amount && (
-          <p className="text-sm text-destructive">{errors.amount.message}</p>
+          <p className="text-xs text-destructive">{errors.amount.message}</p>
         )}
       </div>
 
@@ -231,8 +280,8 @@ export const TransactionForm = ({ onSubmit, isLoading = false }: TransactionForm
       <Button
         type="submit"
         disabled={isSubmitting || isLoading}
-        className="w-full h-12 text-base touch-manipulation"
-        size="lg"
+        className="w-full h-9 text-xs touch-manipulation"
+        size="default"
       >
         {isSubmitting || isLoading ? (
           <>

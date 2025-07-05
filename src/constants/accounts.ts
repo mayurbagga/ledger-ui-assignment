@@ -13,13 +13,16 @@ export const ACCOUNT_TYPES = [
   'Sales',
   'Marketing',
   'Office Supplies',
-  'Utilities'
+  'Utilities',
+  'Office Expenses',
+  'Rent Expense'
 ] as const;
 
 export type AccountType = typeof ACCOUNT_TYPES[number];
 
-// Map account names to their type: 'asset', 'liability', or null
-export const ACCOUNT_TYPE_MAP: Record<string, 'asset' | 'liability' | null> = {
+// Map account names to their type: 'asset', 'liability', 'equity', 'revenue', 'expense'
+export const ACCOUNT_TYPE_MAP: Record<string, 'asset' | 'liability' | 'equity' | 'revenue' | 'expense'> = {
+  // Assets (debit increases, credit decreases)
   'Cash': 'asset',
   'Checking Account': 'asset',
   'Savings Account': 'asset',
@@ -27,14 +30,22 @@ export const ACCOUNT_TYPE_MAP: Record<string, 'asset' | 'liability' | null> = {
   'Equipment': 'asset',
   'Inventory': 'asset',
   'Office Supplies': 'asset',
-  // Liabilities
+  
+  // Liabilities (debit decreases, credit increases)
   'Accounts Payable': 'liability',
   'Loans Payable': 'liability',
-  // Not asset or liability (null)
-  'Revenue': null,
-  'Expenses': null,
-  "Owner's Equity": null,
-  'Sales': null,
-  'Marketing': null,
-  'Utilities': null,
+  
+  // Equity (debit decreases, credit increases)
+  "Owner's Equity": 'equity',
+  
+  // Revenue (debit decreases, credit increases)
+  'Revenue': 'revenue',
+  'Sales': 'revenue',
+  
+  // Expenses (debit increases, credit decreases)
+  'Expenses': 'expense',
+  'Marketing': 'expense',
+  'Utilities': 'expense',
+  'Office Expenses': 'expense',
+  'Rent Expense': 'expense',
 }; 

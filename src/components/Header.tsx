@@ -21,7 +21,7 @@ export function Header({ onAddTransaction, onToggleBalances }: HeaderProps) {
               <BookOpen className="h-5 w-5 text-primary" />
             </div>
             <div className="min-w-0">
-              <h1 className="text-lg font-bold truncate">Ledger UI</h1>
+              <h1 className="text-sm font-bold truncate">Ledger UI</h1>
               <p className="text-xs text-muted-foreground hidden xs:block">
                 Double-entry bookkeeping
               </p>
@@ -46,9 +46,9 @@ export function Header({ onAddTransaction, onToggleBalances }: HeaderProps) {
             {/* New Transaction Button */}
             <button
               onClick={onAddTransaction}
-              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
+              className="inline-flex items-center justify-center rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-3 py-1.5"
             >
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="mr-1.5 h-3.5 w-3.5" />
               New Transaction
             </button>
             <ThemeToggle />

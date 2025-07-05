@@ -1,4 +1,5 @@
 import { Transaction, AccountBalance } from '@/types/api';
+import { format } from 'timeago.js';
 
 export const calculateAccountBalances = (transactions: Transaction[]): AccountBalance[] => {
   if (!Array.isArray(transactions)) {
@@ -40,4 +41,8 @@ export const formatDate = (dateString: string): string => {
     month: 'short',
     day: 'numeric',
   });
+};
+
+export const formatRelativeTime = (dateString: string): string => {
+  return format(dateString);
 }; 

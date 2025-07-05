@@ -25,10 +25,10 @@ export const Default: Story = {
   args: {
     children: (
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Main Content</h2>
-        <p>This is the main content area of the layout.</p>
+        <h2 className="text-sm font-bold">Main Content</h2>
+        <p className="text-xs">This is the main content area of the layout.</p>
         <div className="p-4 bg-card border rounded-lg">
-          <p>Sample content card</p>
+          <p className="text-xs">Sample content card</p>
         </div>
       </div>
     ),
@@ -39,16 +39,16 @@ export const WithSidebar: Story = {
   args: {
     children: (
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Main Content</h2>
-        <p>This is the main content area with a sidebar.</p>
+        <h2 className="text-sm font-bold">Main Content</h2>
+        <p className="text-xs">This is the main content area with a sidebar.</p>
         <div className="p-4 bg-card border rounded-lg">
-          <p>Sample content card</p>
+          <p className="text-xs">Sample content card</p>
         </div>
       </div>
     ),
     sidebarContent: (
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Sidebar</h3>
+        <h3 className="text-sm font-bold">Sidebar</h3>
         <AccountBalanceSummary 
           balances={[
             { account: 'Cash', balance: 1250.00 },
@@ -65,10 +65,10 @@ export const Mobile: Story = {
   args: {
     children: (
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Mobile Layout</h2>
-        <p>This shows the mobile single-column layout.</p>
+        <h2 className="text-sm font-bold">Mobile Layout</h2>
+        <p className="text-xs">This shows the mobile single-column layout.</p>
         <div className="p-4 bg-card border rounded-lg">
-          <p>Sample content card</p>
+          <p className="text-xs">Sample content card</p>
         </div>
       </div>
     ),

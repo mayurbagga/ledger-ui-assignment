@@ -54,7 +54,7 @@ const sampleTransactions = [
 ];
 
 // In-memory storage for mutations
-let transactions = [...sampleTransactions];
+const transactions = [...sampleTransactions];
 
 const customMockHandlers = [
   // GET transactions - with longer delay to ensure loading state shows
@@ -67,15 +67,41 @@ const customMockHandlers = [
 
   // POST transactions - with realistic delay
   http.post('*/transactions', async ({ request }) => {
-    await delay(500); // 500ms delay for mutation
-    const body = await request.json() as NewTransaction;
-    const newTransaction = {
-      ...body,
-      id: String(Date.now()),
-      date: body.date || new Date().toISOString().slice(0, 10),
-    };
-    transactions.push(newTransaction);
-    return HttpResponse.json(newTransaction, { status: 201 });
+    try {
+      await delay(500); // 500ms delay for mutation
+      const body = await request.json() as NewTransaction;
+      
+      // Validate required fields
+      if (!body.description || !body.debitAccount || !body.creditAccount || !body.amount) {
+        return HttpResponse.json(
+          { error: 'Missing required fields' },
+          { status: 400 }
+        );
+      }
+      
+      // Validate amount
+      if (body.amount <= 0) {
+        return HttpResponse.json(
+          { error: 'Amount must be greater than 0' },
+          { status: 400 }
+        );
+      }
+      
+      const newTransaction = {
+        ...body,
+        id: String(Date.now()),
+        date: body.date || new Date().toISOString().slice(0, 10),
+      };
+      transactions.push(newTransaction);
+      console.log('MSW: Created new transaction:', newTransaction);
+      return HttpResponse.json(newTransaction, { status: 201 });
+    } catch (error) {
+      console.error('MSW: Error creating transaction:', error);
+      return HttpResponse.json(
+        { error: 'Internal server error' },
+        { status: 500 }
+      );
+    }
   }),
 
   // DELETE transactions - with realistic delay

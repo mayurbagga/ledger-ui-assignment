@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AccountBalanceSummary } from './AccountBalanceSummary';
+import { ThemeProvider } from '@/providers/ThemeProvider';
 
 const meta: Meta<typeof AccountBalanceSummary> = {
   title: 'Components/AccountBalanceSummary',
@@ -7,6 +8,15 @@ const meta: Meta<typeof AccountBalanceSummary> = {
   parameters: {
     layout: 'centered',
   },
+  decorators: [
+    (Story) => (
+      <ThemeProvider>
+        <div className="w-full max-w-md">
+          <Story />
+        </div>
+      </ThemeProvider>
+    ),
+  ],
 };
 
 export default meta;

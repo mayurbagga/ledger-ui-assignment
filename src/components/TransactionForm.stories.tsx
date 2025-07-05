@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TransactionForm } from './TransactionForm';
+import { ThemeProvider } from '@/providers/ThemeProvider';
 
 const meta: Meta<typeof TransactionForm> = {
   title: 'Components/TransactionForm',
@@ -7,9 +8,15 @@ const meta: Meta<typeof TransactionForm> = {
   parameters: {
     layout: 'centered',
   },
-  argTypes: {
-    onSubmit: { action: 'submitted' },
-  },
+  decorators: [
+    (Story) => (
+      <ThemeProvider>
+        <div className="w-full max-w-md">
+          <Story />
+        </div>
+      </ThemeProvider>
+    ),
+  ],
 };
 
 export default meta;
@@ -17,8 +24,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    onSubmit: async (transaction) => {
-      console.log('Form submitted:', transaction);
+    onSuccess: () => {
+      console.log('Transaction created successfully');
     },
   },
 };
@@ -26,16 +33,16 @@ export const Default: Story = {
 export const Loading: Story = {
   args: {
     isLoading: true,
-    onSubmit: async (transaction) => {
-      console.log('Form submitted:', transaction);
+    onSuccess: () => {
+      console.log('Transaction created successfully');
     },
   },
 };
 
 export const WithError: Story = {
   args: {
-    onSubmit: async () => {
-      throw new Error('Failed to create transaction');
+    onSuccess: () => {
+      console.log('Transaction created successfully');
     },
   },
 }; 
