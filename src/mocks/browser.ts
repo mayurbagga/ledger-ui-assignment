@@ -2,14 +2,6 @@ import { setupWorker } from 'msw/browser';
 import { http, HttpResponse, delay } from 'msw';
 import { sampleTransactions, generateRealisticTransaction } from './transactions';
 
-interface TransactionData {
-  date: string;
-  description: string;
-  debitAccount: string;
-  creditAccount: string;
-  amount: number;
-}
-
 
 const customMockHandlers = [
   // GET transactions
@@ -21,7 +13,7 @@ const customMockHandlers = [
   // POST transactions
   http.post('*/transactions', async ({ request }) => {
     await delay(500);
-    const body = await request.json() as TransactionData;
+    const body = await request.json();
     const newTransaction = generateRealisticTransaction(body);
     sampleTransactions.push(newTransaction);
     return HttpResponse.json(newTransaction, { status: 201 });

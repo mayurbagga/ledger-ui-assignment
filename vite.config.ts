@@ -14,10 +14,6 @@ export default defineConfig({
       "@": path.resolve(__dirname, 'src')
     }
   },
-  // Service worker configuration for MSW
-  worker: {
-    format: 'es'
-  },
   test: {
     projects: [{
       extends: true,

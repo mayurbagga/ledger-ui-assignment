@@ -2,7 +2,7 @@
 
 A modern double-entry ledger UI built with React, TypeScript, SWR, and ShadCN UI components.
 
-## Current Status: Foundation Complete 
+## Current Status: Foundation Complete (60% Done)
 
 ### Completed Features
 - **Core Infrastructure**: API client generation (Orval), SWR integration, MSW mocking
@@ -92,29 +92,6 @@ Access Storybook at `http://localhost:6006` to view:
 - **Tailwind**: Custom CSS variables for theming
 - **ESLint**: Code quality and consistency
 
-## Production Deployment
-
-### MSW Service Worker Setup
-This project uses MSW (Mock Service Worker) for API mocking in both development and production. The service worker is configured to work on Vercel and other hosting platforms.
-
-**Environment Variables:**
-```bash
-# Enable MSW in production (set to 'true' to enable mocking in production)
-VITE_ENABLE_MSW=false
-
-# API base URL (for when you have a real backend)
-VITE_API_BASE_URL=http://localhost:3000/api
-```
-
-**For Demo/Assignment:**
-- Set `VITE_ENABLE_MSW=true` in your Vercel environment variables
-- This will enable the mock data to show in production
-
-**For Real Production:**
-- Set `VITE_ENABLE_MSW=false` 
-- Deploy a real backend API
-- Update `VITE_API_BASE_URL` to point to your production API
-
 ## Next Steps
 
 1. **Transaction Form**: Build form component with validation
@@ -129,7 +106,3 @@ VITE_API_BASE_URL=http://localhost:3000/api
 - API mocking runs only in development mode
 - Theme preferences are persisted in localStorage
 - Responsive design switches between mobile and desktop layouts
-
-## Documentation & Progress
-
-See [`CHECKLIST.md`](./CHECKLIST.md) for detailed progress, requirement mapping, and implementation notes.

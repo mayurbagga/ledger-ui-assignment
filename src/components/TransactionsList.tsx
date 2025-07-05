@@ -1,7 +1,17 @@
-
+import React from 'react';
 // Import the SWR hook from Orval
 import { useGetTransactions } from '@/api/generated/ledgerAPI';
-import type { Transaction } from '@/api/generated/model/transaction';
+    
+
+// Define the Transaction type
+export type Transaction = {
+  id: string;
+  date: string;
+  description: string;
+  debitAccount: string;
+  creditAccount: string;
+  amount: number;
+};
 
 export function TransactionsList() {
   const { data: transactions, isLoading, error } = useGetTransactions();
@@ -37,7 +47,7 @@ export function TransactionsList() {
                 </p>
               </div>
               <div className="text-right">
-                <p className="font-mono font-semibold">${(txn.amount || 0).toFixed(2)}</p>
+                <p className="font-mono font-semibold">${txn.amount.toFixed(2)}</p>
               </div>
             </div>
           </li>

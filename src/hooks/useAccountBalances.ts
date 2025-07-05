@@ -6,7 +6,7 @@ import { AccountBalance } from '@/types/api';
 export function useAccountBalances(): {
   balances: AccountBalance[];
   isLoading: boolean;
-  error: GetTransactionsQueryError | undefined;
+  error: GetTransactionsQueryError;
 } {
   const { data: transactions, error, isLoading } = useGetTransactions();
 
