@@ -39,15 +39,17 @@ export function useAccountBalances(): {
   const { data: transactions, error, isLoading } = useGetTransactions();
 
   const balances = useMemo(() => {
-    // Use fallback data if no data yet, or actual data if available
-    const transactionData = Array.isArray(transactions) ? transactions : fallbackTransactions;
+    // Use fallback data if there's an error, no data, or empty array
+    const transactionData = (error || !transactions || !Array.isArray(transactions) || transactions.length === 0)
+      ? fallbackTransactions
+      : transactions;
     
     if (!transactionData || transactionData.length === 0) {
       return [];
     }
     
     return calculateAccountBalances(transactionData);
-  }, [transactions]);
+  }, [transactions, error]);
 
   return {
     balances,

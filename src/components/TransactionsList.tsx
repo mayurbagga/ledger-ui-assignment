@@ -50,10 +50,10 @@ export function TransactionsList() {
   console.log('TransactionsList - isLoading:', isLoading);
   console.log('TransactionsList - error:', error);
 
-  if (error) return <div>Error loading transactions.</div>;
-  
-  // Use fallback data if no data yet, or actual data if available
-  const transactionArray = Array.isArray(transactions) ? transactions : fallbackTransactions;
+  // Use fallback data if there's an error, no data, or empty array
+  const transactionArray = (error || !transactions || !Array.isArray(transactions) || transactions.length === 0) 
+    ? fallbackTransactions 
+    : transactions;
   
   if (transactionArray.length === 0) {
     return <div>No transactions found.</div>;
