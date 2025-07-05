@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { BookOpen, Plus, BarChart3 } from 'lucide-react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { ThemeToggle } from './ThemeToggle';

@@ -2,24 +2,28 @@ import { Transaction, AccountBalance } from '@/types/api';
 
 export const calculateAccountBalances = (transactions: Transaction[]): AccountBalance[] => {
   if (!Array.isArray(transactions)) {
-    console.error('calculateAccountBalances - transactions is not an array:', transactions);
+    console.error('calculateAccountBalances - transactions is not an array::::', transactions);
     return [];
   }
   
   const balances: Record<string, number> = {};
 
   transactions.forEach(transaction => {
+    const debitAccount = transaction.debitAccount || '';
+    const creditAccount = transaction.creditAccount || '';
+    const amount = transaction.amount || 0;
+    
     // Debit increases the account balance
-    if (!balances[transaction.debitAccount]) {
-      balances[transaction.debitAccount] = 0;
+    if (!balances[debitAccount]) {
+      balances[debitAccount] = 0;
     }
-    balances[transaction.debitAccount] += transaction.amount;
+    balances[debitAccount] += amount;
 
     // Credit decreases the account balance
-    if (!balances[transaction.creditAccount]) {
-      balances[transaction.creditAccount] = 0;
+    if (!balances[creditAccount]) {
+      balances[creditAccount] = 0;
     }
-    balances[transaction.creditAccount] -= transaction.amount;
+    balances[creditAccount] -= amount;
   });
 
   return Object.entries(balances)

@@ -1,7 +1,15 @@
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
+
+interface TransactionData {
+  date: string;
+  description: string;
+  debitAccount: string;
+  creditAccount: string;
+  amount: number;
+}
 
 // Example in-memory data
-let transactions = [
+const transactions = [
   {
     id: '1',
     date: '2024-01-01',
@@ -15,15 +23,14 @@ let transactions = [
 // Define handlers for your API endpoints
 export const handlers = [
   // GET /transactions
-  rest.get('/api/transactions', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(transactions));
+  http.get('/api/transactions', () => {
+    return HttpResponse.json(transactions);
   }),
 
   // POST /transactions
-  rest.post('/api/transactions', async (req, res, ctx) => {
-    const data = await req.json();
+  http.post('/api/transactions', async ({ request }) => {
+    const data = await request.json() as TransactionData;
     const newTransaction = { ...data, id: String(Date.now()) };
-    transactions.push(newTransaction);
-    return res(ctx.status(201), ctx.json(newTransaction));
+    return HttpResponse.json(newTransaction, { status: 201 });
   }),
 ];
