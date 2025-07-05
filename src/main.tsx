@@ -5,9 +5,12 @@ import './index.css';
 import { ThemeProvider } from './providers/ThemeProvider';
 
 async function main() {
-  if (import.meta.env.DEV) {
+  // Enable MSW in both development and production
+  if (import.meta.env.DEV || import.meta.env.VITE_ENABLE_MSW === 'true') {
     const { worker } = await import('./mocks/browser');
-    worker.start();
+    await worker.start({
+      onUnhandledRequest: 'bypass', // Don't warn about unhandled requests
+    });
   }
 
   ReactDOM.createRoot(document.getElementById('root')!).render(
