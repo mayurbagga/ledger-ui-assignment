@@ -56,14 +56,14 @@ export const TransactionPagination: React.FC<TransactionPaginationProps> = ({
   }
 
   return (
-    <div className="flex items-center justify-between space-x-2 py-2">
-      <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+    <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-2 py-2">
+      <div className="flex items-center space-x-2 text-xs text-muted-foreground text-center md:text-left">
         <span>
           Showing {startItem} to {endItem} of {totalItems} transactions
         </span>
       </div>
 
-      <div className="flex items-center space-x-2">
+      <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
         {/* Page Size Selector */}
         <div className="flex items-center space-x-2">
           <span className="text-xs text-muted-foreground">Show:</span>

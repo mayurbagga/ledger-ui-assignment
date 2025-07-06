@@ -28,22 +28,16 @@ export function Header({ onAddTransaction, onToggleBalances }: HeaderProps) {
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Theme Toggle */}
-           
-
-            {/* Balances Toggle - Only on Mobile */}
             {isMobile && (
               <button
                 onClick={onToggleBalances}
-                className="h-9 w-9 p-0 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+                className="h-9 w-9 p-0 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground flex items-center justify-center"
               >
                 <BarChart3 className="h-4 w-4" />
               </button>
             )}
 
-            {/* New Transaction Button */}
             <button
               onClick={onAddTransaction}
               className="inline-flex items-center justify-center rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-3 py-1.5"
@@ -51,6 +45,7 @@ export function Header({ onAddTransaction, onToggleBalances }: HeaderProps) {
               <Plus className="mr-1.5 h-3.5 w-3.5" />
               New Transaction
             </button>
+
             <ThemeToggle />
           </div>
         </div>
