@@ -205,7 +205,6 @@ This project benefited from AI assistance for:
 - **Documentation formatting** - Help with README structure and technical writing
 - **TypeScript type definitions** - Assistance with complex type interfaces and API types
 - **Code organization** - Suggestions for file structure and component architecture
-- **Code generation** - Automating lengthy and repetitive coding tasks to reduce development time
 - **Repetitive tasks** - Streamlining routine development work for better efficiency
 
 The core business logic, component implementation, and technical decisions were made independently. AI was used as a collaborative tool to improve code quality and documentation clarity, following modern development practices where AI assists with routine tasks while developers focus on creative problem-solving and architectural decisions.
