@@ -198,6 +198,20 @@ This is a demo application deployed on Vercel. The backend API is not available 
 - Storybook documentation
 - Type safety with IntelliSense
 
+## Development Notes
+
+### AI Assistance
+This project benefited from AI assistance for:
+- **Documentation formatting** - Help with README structure and technical writing
+- **TypeScript type definitions** - Assistance with complex type interfaces and API types
+- **Code organization** - Suggestions for file structure and component architecture
+- **Code generation** - Automating lengthy and repetitive coding tasks to reduce development time
+- **Repetitive tasks** - Streamlining routine development work for better efficiency
+
+The core business logic, component implementation, and technical decisions were made independently. AI was used as a collaborative tool to improve code quality and documentation clarity, following modern development practices where AI assists with routine tasks while developers focus on creative problem-solving and architectural decisions.
+
+Additionally, AI assistance was valuable for understanding complex technical concepts and exploring different implementation approaches, helping to accelerate the learning process and make informed architectural decisions.
+
 ## Available Scripts
 
 - `npm run dev` - Start development server
