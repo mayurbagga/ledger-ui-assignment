@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Plus, PieChart } from 'lucide-react';
+import { BookOpen, Plus, BarChart3 } from 'lucide-react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -34,7 +34,7 @@ export function Header({ onAddTransaction, onToggleBalances }: HeaderProps) {
                 onClick={onToggleBalances}
                 className="h-9 w-9 p-0 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground flex items-center justify-center"
               >
-                <PieChart className="h-4 w-4" />
+                <BarChart3 className="h-4 w-4" />
               </button>
             )}
 
