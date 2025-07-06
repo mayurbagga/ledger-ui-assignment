@@ -1,39 +1,16 @@
 import { http } from 'msw';
+import { sampleTransactions } from './transactions';
 
 interface TransactionData {
   description: string;
   debitAccount: string;
   creditAccount: string;
   amount: number;
+  date?: string;
 }
 
-// Example in-memory data with more transactions
-const transactions = [
-  {
-    id: '1',
-    date: '2024-01-01',
-    description: 'Initial balance',
-    debitAccount: 'Cash',
-    creditAccount: 'Owner\'s Equity',
-    amount: 1000,
-  },
-  {
-    id: '2',
-    date: '2024-01-02',
-    description: 'Office supplies',
-    debitAccount: 'Office Expenses',
-    creditAccount: 'Cash',
-    amount: 150,
-  },
-  {
-    id: '3',
-    date: '2024-01-03',
-    description: 'Client payment',
-    debitAccount: 'Cash',
-    creditAccount: 'Accounts Receivable',
-    amount: 500,
-  },
-];
+// Use the updated sample transactions with 2025 dates
+let transactions = [...sampleTransactions];
 
 // Define handlers for your API endpoints
 export const handlers = [
@@ -45,8 +22,13 @@ export const handlers = [
   // POST /transactions
   http.post('/api/transactions', async ({ request }) => {
     const data = await request.json() as TransactionData;
-    const newTransaction = { ...data, id: String(Date.now()) };
-    // Note: In a real app, you'd update the transactions array here
+    const newTransaction = { 
+      ...data, 
+      id: String(Date.now()),
+      date: data.date || new Date().toISOString()
+    };
+    // Add the new transaction to the array
+    transactions = [...transactions, newTransaction];
     return Response.json(newTransaction, { status: 201 });
   }),
 ];

@@ -6,6 +6,7 @@
  */
 import useSwr from 'swr';
 import type {
+  Arguments,
   Key,
   SWRConfiguration
 } from 'swr';
@@ -105,6 +106,50 @@ export const usePostTransactions = <TError = ErrorType<unknown>>(
 
   const swrKey = swrOptions?.swrKey ?? getPostTransactionsMutationKey();
   const swrFn = getPostTransactionsMutationFetcher(requestOptions);
+
+  const query = useSWRMutation(swrKey, swrFn, swrOptions)
+
+  return {
+    swrKey,
+    ...query
+  }
+}
+
+/**
+ * @summary Delete Transaction
+ */
+export const deleteTransactionsId = (
+    id: string,
+ options?: SecondParameter<typeof customInstance>) => {
+    return customInstance<void>(
+    {url: `/transactions/${id}`, method: 'DELETE'
+    },
+    options);
+  }
+
+
+
+export const getDeleteTransactionsIdMutationFetcher = (id: string, options?: SecondParameter<typeof customInstance>) => {
+  return (_: Key, __: { arg: Arguments }): Promise<void> => {
+    return deleteTransactionsId(id, options);
+  }
+}
+export const getDeleteTransactionsIdMutationKey = (id: string,) => [`/transactions/${id}`] as const;
+
+export type DeleteTransactionsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteTransactionsId>>>
+export type DeleteTransactionsIdMutationError = ErrorType<void>
+
+/**
+ * @summary Delete Transaction
+ */
+export const useDeleteTransactionsId = <TError = ErrorType<void>>(
+  id: string, options?: { swr?:SWRMutationConfiguration<Awaited<ReturnType<typeof deleteTransactionsId>>, TError, Key, Arguments, Awaited<ReturnType<typeof deleteTransactionsId>>> & { swrKey?: string }, request?: SecondParameter<typeof customInstance>}
+) => {
+
+  const {swr: swrOptions, request: requestOptions} = options ?? {}
+
+  const swrKey = swrOptions?.swrKey ?? getDeleteTransactionsIdMutationKey(id);
+  const swrFn = getDeleteTransactionsIdMutationFetcher(id, requestOptions);
 
   const query = useSWRMutation(swrKey, swrFn, swrOptions)
 

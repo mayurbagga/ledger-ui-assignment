@@ -11,7 +11,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Loader2, Plus, ArrowRight, DollarSign, CalendarIcon } from 'lucide-react';
+import { Loader2, Plus, ArrowRight, DollarSign, CalendarIcon, FileText, Building2 } from 'lucide-react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { usePostTransactions, useGetTransactions } from '@/api/generated/ledgerAPI';
 
@@ -54,7 +54,7 @@ export const TransactionForm = ({ isLoading = false, onSuccess }: TransactionFor
   } = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString(),
     },
   });
 
@@ -95,9 +95,9 @@ export const TransactionForm = ({ isLoading = false, onSuccess }: TransactionFor
       
       if (error instanceof Error) {
         if (error.message.includes('Network Error') || error.message.includes('Failed to fetch')) {
-          setError("Network error: Unable to connect to server. Please check your connection.");
+          setError("Network error: Unable to connect to server. This is a demo application - in production, this would connect to a live backend API.");
         } else if (error.message.includes('404')) {
-          setError("API endpoint not found. Please contact support.");
+          setError("API endpoint not found. This is a demo application deployed on Vercel - the backend API is not available in production. In a real application, this would connect to a live backend server.");
         } else if (error.message.includes('500')) {
           setError("Server error. Please try again later.");
         } else {
@@ -155,7 +155,7 @@ export const TransactionForm = ({ isLoading = false, onSuccess }: TransactionFor
               onSelect={(date) => {
                 if (date) {
                   setSelectedDate(date);
-                  setValue('date', date.toISOString().split('T')[0]);
+                  setValue('date', date.toISOString());
                   setOpen(false);
                 }
               }}
@@ -168,7 +168,7 @@ export const TransactionForm = ({ isLoading = false, onSuccess }: TransactionFor
         <input
           type="hidden"
           {...register('date')}
-          value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
+          value={selectedDate ? selectedDate.toISOString() : ''}
         />
         {errors.date && (
           <p className="text-xs text-destructive">{errors.date.message}</p>
@@ -177,7 +177,8 @@ export const TransactionForm = ({ isLoading = false, onSuccess }: TransactionFor
 
       {/* Description */}
       <div className="space-y-1">
-        <Label htmlFor="description" className="text-xs font-medium">
+        <Label htmlFor="description" className="text-xs font-medium flex items-center gap-2">
+          <FileText className="h-4 w-4" />
           Description
         </Label>
         <Input
@@ -194,6 +195,7 @@ export const TransactionForm = ({ isLoading = false, onSuccess }: TransactionFor
       {/* Account Selection */}
       <div className="space-y-2">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Building2 className="h-4 w-4" />
           <span>Account Flow</span>
           <ArrowRight className="h-4 w-4" />
         </div>
@@ -305,6 +307,10 @@ export const TransactionForm = ({ isLoading = false, onSuccess }: TransactionFor
   return (
     <Card className="border-0 shadow-none">
       <CardContent className="p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Plus className="h-4 w-4" />
+          <h3 className="text-sm font-semibold">Create New Transaction</h3>
+        </div>
         <FormContent />
       </CardContent>
     </Card>

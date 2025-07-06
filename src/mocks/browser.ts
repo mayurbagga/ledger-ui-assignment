@@ -1,5 +1,6 @@
 import { setupWorker } from 'msw/browser';
 import { http, HttpResponse, delay } from 'msw';
+import { sampleTransactions } from './transactions';
 
 interface NewTransaction {
   description: string;
@@ -9,56 +10,12 @@ interface NewTransaction {
   date?: string;
 }
 
-// Realistic sample data
-const sampleTransactions = [
-  {
-    id: '1',
-    date: '2024-01-01',
-    description: 'Initial balance',
-    debitAccount: 'Cash',
-    creditAccount: "Owner's Equity",
-    amount: 1000,
-  },
-  {
-    id: '2',
-    date: '2024-01-02',
-    description: 'Office supplies purchase',
-    debitAccount: 'Office Expenses',
-    creditAccount: 'Cash',
-    amount: 150,
-  },
-  {
-    id: '3',
-    date: '2024-01-03',
-    description: 'Client payment for consulting services',
-    debitAccount: 'Cash',
-    creditAccount: 'Accounts Receivable',
-    amount: 500,
-  },
-  {
-    id: '4',
-    date: '2024-01-04',
-    description: 'Rent payment',
-    debitAccount: 'Rent Expense',
-    creditAccount: 'Cash',
-    amount: 800,
-  },
-  {
-    id: '5',
-    date: '2024-01-05',
-    description: 'Equipment purchase',
-    debitAccount: 'Equipment',
-    creditAccount: 'Cash',
-    amount: 1200,
-  },
-];
-
 // In-memory storage for mutations
 const transactions = [...sampleTransactions];
 
 const customMockHandlers = [
   // GET transactions - with longer delay to ensure loading state shows
-  http.get('*/transactions', async () => {
+  http.get('/api/transactions', async () => {
     console.log('MSW: Starting GET request with delay...');
     await delay(2000); // 2 second delay to make loading state very visible
     console.log('MSW: Returning transactions data');
@@ -66,13 +23,16 @@ const customMockHandlers = [
   }),
 
   // POST transactions - with realistic delay
-  http.post('*/transactions', async ({ request }) => {
+  http.post('/api/transactions', async ({ request }) => {
+    console.log('MSW: POST /api/transactions request received');
     try {
       await delay(500); // 500ms delay for mutation
       const body = await request.json() as NewTransaction;
+      console.log('MSW: Request body:', body);
       
       // Validate required fields
       if (!body.description || !body.debitAccount || !body.creditAccount || !body.amount) {
+        console.log('MSW: Validation failed - missing required fields');
         return HttpResponse.json(
           { error: 'Missing required fields' },
           { status: 400 }
@@ -81,6 +41,7 @@ const customMockHandlers = [
       
       // Validate amount
       if (body.amount <= 0) {
+        console.log('MSW: Validation failed - amount must be positive');
         return HttpResponse.json(
           { error: 'Amount must be greater than 0' },
           { status: 400 }
@@ -90,10 +51,11 @@ const customMockHandlers = [
       const newTransaction = {
         ...body,
         id: String(Date.now()),
-        date: body.date || new Date().toISOString().slice(0, 10),
+        date: body.date || new Date().toISOString(),
       };
       transactions.push(newTransaction);
       console.log('MSW: Created new transaction:', newTransaction);
+      console.log('MSW: Total transactions now:', transactions.length);
       return HttpResponse.json(newTransaction, { status: 201 });
     } catch (error) {
       console.error('MSW: Error creating transaction:', error);
@@ -105,7 +67,7 @@ const customMockHandlers = [
   }),
 
   // DELETE transactions - with realistic delay
-  http.delete('*/transactions/:id', async ({ params }) => {
+  http.delete('/api/transactions/:id', async ({ params }) => {
     await delay(300); // 300ms delay for delete
     const { id } = params;
     const idx = transactions.findIndex(t => t.id === id);
@@ -114,6 +76,15 @@ const customMockHandlers = [
       return new HttpResponse(null, { status: 204 });
     }
     return new HttpResponse(null, { status: 404 });
+  }),
+
+  // Fallback handler for unmatched requests
+  http.all('*', ({ request }) => {
+    console.log('MSW: Unhandled request:', request.method, request.url);
+    return HttpResponse.json(
+      { error: 'API endpoint not found. Please contact support.' },
+      { status: 404 }
+    );
   }),
 ];
 

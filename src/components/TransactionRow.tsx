@@ -74,12 +74,12 @@ export const TransactionRow = React.memo(({ transaction, onDelete }: Transaction
   // Desktop layout
   return (
     <div className="grid grid-cols-12 gap-3 p-3 hover:bg-muted/30 transition-colors group w-full items-center">
+      <div className="col-span-3 flex items-center">
+        <span className="text-xs leading-relaxed">{transaction.description}</span>
+      </div>
       <div className="col-span-2 flex flex-col items-start justify-center">
         <span className="text-xs font-medium leading-tight">{formatDate(transaction.date)}</span>
         <span className="text-xs text-muted-foreground/70 leading-tight">{formatRelativeTime(transaction.date)}</span>
-      </div>
-      <div className="col-span-3 flex items-center">
-        <span className="text-xs leading-relaxed">{transaction.description}</span>
       </div>
       <div className="col-span-2 flex items-center">
         <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800 text-xs px-2 py-1">

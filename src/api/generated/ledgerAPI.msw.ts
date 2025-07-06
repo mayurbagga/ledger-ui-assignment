@@ -47,7 +47,18 @@ export const getPostTransactionsMockHandler = (overrideResponse?: Transaction | 
       })
   })
 }
+
+export const getDeleteTransactionsIdMockHandler = (overrideResponse?: void | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void)) => {
+  return http.delete('*/transactions/:id', async (info) => {await delay(1000);
+  if (typeof overrideResponse === 'function') {await overrideResponse(info); }
+    return new HttpResponse(null,
+      { status: 204,
+        
+      })
+  })
+}
 export const getLedgerAPIMock = () => [
   getGetTransactionsMockHandler(),
-  getPostTransactionsMockHandler()
+  getPostTransactionsMockHandler(),
+  getDeleteTransactionsIdMockHandler()
 ]

@@ -15,7 +15,16 @@ export const ACCOUNT_TYPES = [
   'Office Supplies',
   'Utilities',
   'Office Expenses',
-  'Rent Expense'
+  'Rent Expense',
+  'Software Licenses',
+  'Insurance',
+  'Meals & Entertainment',
+  'Contractor Expenses',
+  'Website Expenses',
+  'Bank Fees',
+  'Cleaning Services',
+  'Travel Expenses',
+  'Equipment Maintenance'
 ] as const;
 
 export type AccountType = typeof ACCOUNT_TYPES[number];
@@ -48,4 +57,13 @@ export const ACCOUNT_TYPE_MAP: Record<string, 'asset' | 'liability' | 'equity' |
   'Utilities': 'expense',
   'Office Expenses': 'expense',
   'Rent Expense': 'expense',
+  'Software Licenses': 'expense',
+  'Insurance': 'expense',
+  'Meals & Entertainment': 'expense',
+  'Contractor Expenses': 'expense',
+  'Website Expenses': 'expense',
+  'Bank Fees': 'expense',
+  'Cleaning Services': 'expense',
+  'Travel Expenses': 'expense',
+  'Equipment Maintenance': 'expense',
 }; 

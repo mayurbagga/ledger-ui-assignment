@@ -6,6 +6,10 @@ import { Badge } from '@/components/ui/badge';
 import { TrendingUp, TrendingDown, DollarSign, Wallet } from 'lucide-react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { ACCOUNT_TYPE_MAP } from '@/constants/accounts';
+import { useAccountBalancePagination } from '@/hooks/useAccountBalancePagination';
+import { useAccountBalanceFilters } from '@/hooks/useAccountBalanceFilters';
+import { AccountBalancePagination } from './AccountBalancePagination';
+import { AccountBalanceFilterModal } from './AccountBalanceFilterModal';
 
 interface AccountBalanceSummaryProps {
   balances: AccountBalance[];
@@ -26,6 +30,24 @@ export const AccountBalanceSummary = React.memo(({ balances }: AccountBalanceSum
   const netWorth = totalAssets - totalLiabilities;
 
   const isMobile = useMediaQuery('(max-width: 768px)');
+
+  // Apply filtering and pagination to account balances
+  const {
+    filters,
+    filteredBalances,
+    handleFiltersChange,
+    handleClearFilters,
+  } = useAccountBalanceFilters(balances);
+
+  const {
+    paginatedBalances,
+    totalItems,
+    totalPages,
+    currentPage,
+    pageSize,
+    handlePageChange,
+    handlePageSizeChange,
+  } = useAccountBalancePagination(filteredBalances);
 
   if (isMobile) {
     return (
@@ -65,11 +87,18 @@ export const AccountBalanceSummary = React.memo(({ balances }: AccountBalanceSum
 
         {/* Mobile Account Balances */}
         <div className="bg-background border rounded-lg">
-          <div className="p-3 border-b">
+          <div className="p-3 border-b flex items-center justify-between">
             <h3 className="font-bold text-sm flex items-center gap-2">
               <Wallet className="h-4 w-4" />
               Account Balances
             </h3>
+            <AccountBalanceFilterModal
+              filters={filters}
+              onFiltersChange={handleFiltersChange}
+              onClearFilters={handleClearFilters}
+              totalAccounts={balances.length}
+              filteredCount={filteredBalances.length}
+            />
           </div>
           <div className="p-3">
             {balances.length === 0 ? (
@@ -83,7 +112,7 @@ export const AccountBalanceSummary = React.memo(({ balances }: AccountBalanceSum
               </div>
             ) : (
               <div className="space-y-2">
-                {balances.map((balance) => (
+                {paginatedBalances.map((balance) => (
                   <div 
                     key={balance.account} 
                     className="flex justify-between items-center p-2 rounded border bg-background/50 hover:bg-muted/20 transition-colors"
@@ -124,6 +153,18 @@ export const AccountBalanceSummary = React.memo(({ balances }: AccountBalanceSum
                 ))}
               </div>
             )}
+          </div>
+          
+          {/* Mobile Pagination */}
+          <div className="p-3 border-t">
+            <AccountBalancePagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              totalItems={totalItems}
+              onPageChange={handlePageChange}
+              onPageSizeChange={handlePageSizeChange}
+            />
           </div>
         </div>
       </div>
@@ -175,10 +216,19 @@ export const AccountBalanceSummary = React.memo(({ balances }: AccountBalanceSum
       {/* Account Balances */}
       <Card className="shadow-sm">
         <CardHeader className="pb-4">
-          <CardTitle className="flex items-center gap-2 text-sm font-bold">
-            <Wallet className="h-5 w-5" />
-            Account Balances
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-sm font-bold">
+              <Wallet className="h-5 w-5" />
+              Account Balances
+            </CardTitle>
+            <AccountBalanceFilterModal
+              filters={filters}
+              onFiltersChange={handleFiltersChange}
+              onClearFilters={handleClearFilters}
+              totalAccounts={balances.length}
+              filteredCount={filteredBalances.length}
+            />
+          </div>
         </CardHeader>
         <CardContent>
           {balances.length === 0 ? (
@@ -190,49 +240,61 @@ export const AccountBalanceSummary = React.memo(({ balances }: AccountBalanceSum
                 No account balances to display.
               </p>
             </div>
-          ) : (
-            <div className="space-y-3">
-              {balances.map((balance) => (
-                <div 
-                  key={balance.account} 
-                  className="flex justify-between items-center p-3 rounded-lg border bg-background/50 hover:bg-muted/30 transition-colors"
-                >
-                  <div className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${
-                      ACCOUNT_TYPE_MAP[balance.account] === 'asset' 
-                        ? 'bg-green-500'
-                        : ACCOUNT_TYPE_MAP[balance.account] === 'liability'
-                        ? 'bg-red-500'
-                        : ACCOUNT_TYPE_MAP[balance.account] === 'equity'
-                        ? 'bg-blue-500'
-                        : ACCOUNT_TYPE_MAP[balance.account] === 'revenue'
-                        ? 'bg-purple-500'
-                        : 'bg-orange-500' // expense
-                    }`} />
-                    <span className="font-medium text-xs">{balance.account}</span>
-                  </div>
-                  <Badge
-                    variant={
-                      ACCOUNT_TYPE_MAP[balance.account] === 'asset' && balance.balance >= 0
-                        ? 'default'
-                        : ACCOUNT_TYPE_MAP[balance.account] === 'liability' && balance.balance < 0
-                        ? 'default'
-                        : ACCOUNT_TYPE_MAP[balance.account] === 'equity' && balance.balance < 0
-                        ? 'default'
-                        : ACCOUNT_TYPE_MAP[balance.account] === 'revenue' && balance.balance < 0
-                        ? 'default'
-                        : ACCOUNT_TYPE_MAP[balance.account] === 'expense' && balance.balance > 0
-                        ? 'default'
-                        : 'destructive'
-                    }
-                    className="font-mono text-xs font-semibold"
+                      ) : (
+              <div className="space-y-3">
+                {paginatedBalances.map((balance) => (
+                  <div 
+                    key={balance.account} 
+                    className="flex justify-between items-center p-3 rounded-lg border bg-background/50 hover:bg-muted/30 transition-colors"
                   >
-                    {formatCurrency(balance.balance)}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          )}
+                    <div className="flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full ${
+                        ACCOUNT_TYPE_MAP[balance.account] === 'asset' 
+                          ? 'bg-green-500'
+                          : ACCOUNT_TYPE_MAP[balance.account] === 'liability'
+                          ? 'bg-red-500'
+                          : ACCOUNT_TYPE_MAP[balance.account] === 'equity'
+                          ? 'bg-blue-500'
+                          : ACCOUNT_TYPE_MAP[balance.account] === 'revenue'
+                          ? 'bg-purple-500'
+                          : 'bg-orange-500' // expense
+                      }`} />
+                      <span className="font-medium text-xs">{balance.account}</span>
+                    </div>
+                    <Badge
+                      variant={
+                        ACCOUNT_TYPE_MAP[balance.account] === 'asset' && balance.balance >= 0
+                          ? 'default'
+                          : ACCOUNT_TYPE_MAP[balance.account] === 'liability' && balance.balance < 0
+                          ? 'default'
+                          : ACCOUNT_TYPE_MAP[balance.account] === 'equity' && balance.balance < 0
+                          ? 'default'
+                          : ACCOUNT_TYPE_MAP[balance.account] === 'revenue' && balance.balance < 0
+                          ? 'default'
+                          : ACCOUNT_TYPE_MAP[balance.account] === 'expense' && balance.balance > 0
+                          ? 'default'
+                          : 'destructive'
+                      }
+                      className="font-mono text-xs font-semibold"
+                    >
+                      {formatCurrency(balance.balance)}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+          
+          {/* Desktop Pagination */}
+          <div className="pt-4 mt-4 border-t">
+            <AccountBalancePagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              totalItems={totalItems}
+              onPageChange={handlePageChange}
+              onPageSizeChange={handlePageSizeChange}
+            />
+          </div>
         </CardContent>
       </Card>
     </div>
